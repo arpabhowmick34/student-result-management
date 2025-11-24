@@ -106,15 +106,52 @@ int main(){
     int choice;
     do {
         cout << "\n===== STUDENT RESULT SYSTEM =====\n";
-        cout << "1. Add Student\n";
-        cout << "2. Search Result by ID + Year + Semester\n";
-        cout << "3. Add Courses for Semester + Year\n";
+        cout << "1. Add Courses for Semester + Year\n";
+        cout << "2. Add Student\n";
+        cout << "3. Search Result by ID + Year + Semester\n";
         cout << "4. Edit Student Details\n";
         cout << "0. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
 
+
         if(choice==1){
+            string sem;
+            int year;
+            cout << "\nEnter Year: ";
+            cin >> year;
+            cout << "Enter Semester: ";
+            cin >> sem;
+
+            int n;
+            cout << "How many courses do you want to add for this Semester + Year? ";
+            cin >> n;
+
+            for(int i=1;i<=n;i++){
+                string cname;
+                int credit;
+                cout << "\nCourse " << i << " Name: ";
+                cin >> cname;
+                cout << "Credit for " << cname << ": ";
+                cin >> credit;
+
+                // check duplicate
+                bool found=false;
+                for(auto &c: courses){
+                    if(c.name==cname && c.year==year && c.semester==sem){
+                        found=true;
+                        cout << "Course already exists! Skipping...\n";
+                        break;
+                    }
+                }
+                if(!found){
+                    courses.push_back({cname, credit, year, sem});
+                }
+            }
+            cout << "\nCourses added successfully for " << sem << " " << year << "\n";
+
+        }
+        else if(choice==2){
             Student s;
             cout << "\nEnter ID: ";
             cin >> s.id;
@@ -158,7 +195,7 @@ int main(){
             quickSort(students, 0, students.size()-1);
             cout << "\nStudent added successfully!\n";
         }
-        else if(choice==2){
+        else if(choice==3){
             if(students.empty()){
                 cout << "\nNo students in database!\n";
                 continue;
@@ -180,41 +217,6 @@ int main(){
                 else
                     cout << "\nRecord not found for given Year/Semester!\n";
             }
-        }
-        else if(choice==3){
-            string sem;
-            int year;
-            cout << "\nEnter Year: ";
-            cin >> year;
-            cout << "Enter Semester: ";
-            cin >> sem;
-
-            int n;
-            cout << "How many courses do you want to add for this Semester + Year? ";
-            cin >> n;
-
-            for(int i=1;i<=n;i++){
-                string cname;
-                int credit;
-                cout << "\nCourse " << i << " Name: ";
-                cin >> cname;
-                cout << "Credit for " << cname << ": ";
-                cin >> credit;
-
-                // check duplicate
-                bool found=false;
-                for(auto &c: courses){
-                    if(c.name==cname && c.year==year && c.semester==sem){
-                        found=true;
-                        cout << "Course already exists! Skipping...\n";
-                        break;
-                    }
-                }
-                if(!found){
-                    courses.push_back({cname, credit, year, sem});
-                }
-            }
-            cout << "\nCourses added successfully for " << sem << " " << year << "\n";
         }
         else if(choice==4){
             if(students.empty()){
