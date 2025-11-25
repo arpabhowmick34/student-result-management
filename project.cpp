@@ -95,7 +95,7 @@ void printResult(Student &student, vector<Course> &allCourses) {
     for(auto &cm : student.courseMarks) {
         string courseName = cm.first;
         int marks = cm.second;
-        int credit = 0;
+        float credit = 0;
 
         // course credit
         for(auto &c : allCourses) {
@@ -303,7 +303,9 @@ int main(){
                 char ch; cin >> ch;
                 while(ch=='y' || ch=='Y'){
                     string cname;
-                    int credit, marks;
+                    int marks;
+                    float credit;
+                    
                     cout << "Enter Course Name: "; cin >> cname;
                     cout << "Enter Credit: "; cin >> credit;
                     cout << "Enter Marks: "; cin >> marks;
