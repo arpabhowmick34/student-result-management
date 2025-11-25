@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-// ---------------- Grade Function ----------------
+//  Grade Function
 pair<string,double> getGrade(int marks) {
     if(marks >= 80) return {"A+",4.00};
     if(marks >= 75) return {"A",3.75};
@@ -16,24 +16,24 @@ pair<string,double> getGrade(int marks) {
     return {"F",0.00};
 }
 
-// ---------------- Course Structure ----------------
+//  Course Structure
 struct Course {
     string name;
-    int credit;
+    float credit;
     int year;
     string semester;
 };
 
-// ---------------- Student Structure ----------------
+//  Student Structure
 struct Student {
     string id;
     string name;
     int year;
     string semester;
-    vector<pair<string,int>> courseMarks; // <course name, marks>
+    vector<pair<string,int>> courseMarks;
 };
 
-// ---------------- Quick Sort ----------------
+//  Quick Sort
 int partition(vector<Student>& students, int low, int high) {
     string pivot = students[high].id;
     int i = low - 1;
@@ -55,57 +55,87 @@ void quickSort(vector<Student>& students, int low, int high){
     }
 }
 
-// ---------------- Binary Search ----------------
-int binarySearch(vector<Student>& students, string key){
-    int left=0, right=students.size()-1;
-    while(left <= right){
-        int mid = (left + right)/2;
-        if(students[mid].id == key) return mid;
-        else if(students[mid].id < key) left = mid + 1;
-        else right = mid - 1;
+// Binary Search
+int binarySearch(vector<Student>& students, string key) {
+    int left = 0;
+    int right = students.size() - 1;
+
+    while(left <= right) {
+        int mid = (left + right) / 2;
+
+        if(students[mid].id == key) {
+            return mid;
+        }
+        else if(students[mid].id < key) {
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+        }
     }
+
     return -1;
 }
 
-// ---------------- Print Student Result ----------------
-void printResult(Student &s, vector<Course> &courses){
-    cout << "\n===== RESULT =====\n";
-    cout << "ID       : " << s.id << endl;
-    cout << "Name     : " << s.name << endl;
-    cout << "Year     : " << s.year << endl;
-    cout << "Semester : " << s.semester << endl;
+// Print Student Result
+void printResult(Student &student, vector<Course> &allCourses) {
+    // student basic info
+    cout << "\n===== STUDENT RESULT =====\n";
+    cout << "ID       : " << student.id << "\n";
+    cout << "Name     : " << student.name << "\n";
+    cout << "Year     : " << student.year << "\n";
+    cout << "Semester : " << student.semester << "\n";
 
     double totalPoints = 0;
     int totalCredits = 0;
 
     cout << "\n--- Marks & Grades ---\n";
-    for(auto &cm : s.courseMarks){
+
+    //  course marks
+    for(auto &cm : student.courseMarks) {
+        string courseName = cm.first;
+        int marks = cm.second;
         int credit = 0;
-        for(auto &c: courses){
-            if(c.name==cm.first && c.year==s.year && c.semester==s.semester){
+
+        // course credit
+        for(auto &c : allCourses) {
+            if(c.name == courseName) {
                 credit = c.credit;
                 break;
             }
         }
-        auto g = getGrade(cm.second);
-        cout << cm.first << " : " << cm.second << " (" << g.first << ", " << g.second << "), Credit: " << credit << "\n";
-        totalPoints += g.second * credit;
+
+        // grade and grade point
+        pair<string, double> gradeInfo = getGrade(marks);
+        string grade = gradeInfo.first;
+        double point = gradeInfo.second;
+
+        // course info
+        cout << courseName << " : " << marks << " (" << grade << ", " << point << ")"
+             << ", Credit: " << credit << "\n";
+
+
+        totalPoints += point * credit;
         totalCredits += credit;
     }
 
-    double gpa = totalCredits ? (totalPoints / totalCredits) : 0;
-    cout << "\nFinal GPA : " << gpa << endl;
-    cout << "===================\n";
+    // GPA
+    double gpa = 0;
+    if(totalCredits > 0) {
+        gpa = totalPoints / totalCredits;
+    }
+
+    cout << "\nFinal GPA : " << gpa << "\n";
+
 }
 
-// ---------------- MAIN ----------------
 int main(){
     vector<Student> students;
     vector<Course> courses;
 
     int choice;
     do {
-        cout << "\n===== STUDENT RESULT SYSTEM =====\n";
+        cout << "\n  STUDENT RESULT SYSTEM  \n";
         cout << "1. Add Courses for Semester + Year\n";
         cout << "2. Add Student\n";
         cout << "3. Search Result by ID + Year + Semester\n";
@@ -129,7 +159,7 @@ int main(){
 
             for(int i=1;i<=n;i++){
                 string cname;
-                int credit;
+                float credit;
                 cout << "\nCourse " << i << " Name: ";
                 cin >> cname;
                 cout << "Credit for " << cname << ": ";
@@ -140,7 +170,7 @@ int main(){
                 for(auto &c: courses){
                     if(c.name==cname && c.year==year && c.semester==sem){
                         found=true;
-                        cout << "Course already exists! Skipping...\n";
+                        cout << "Course already exists! \n";
                         break;
                     }
                 }
@@ -170,7 +200,7 @@ int main(){
             cout << "Enter Semester: ";
             cin >> s.semester;
 
-            // find courses for this semester
+
             vector<Course> semCourses;
             for(auto &c : courses){
                 if(c.year==s.year && c.semester==s.semester){
@@ -215,7 +245,7 @@ int main(){
                 if(students[idx].year==year && students[idx].semester==semester)
                     printResult(students[idx], courses);
                 else
-                    cout << "\nRecord not found for given Year/Semester!\n";
+                    cout << "\n not found!\n";
             }
         }
         else if(choice==4){
@@ -249,7 +279,7 @@ int main(){
             cout << "Enter new Semester (or same to keep): ";
             string newSem; cin >> newSem;
 
-            // Update year/semester if courses exist
+            // Update year/semester
             vector<Course> semCourses;
             for(auto &c: courses){
                 if(c.year==newYear && c.semester==newSem){
@@ -261,14 +291,14 @@ int main(){
                 s.year = newYear;
                 s.semester = newSem;
 
-                // Ask if want to edit existing marks
+                //  edit marks
                 for(auto &cm : s.courseMarks){
                     cout << "Current marks for " << cm.first << ": " << cm.second << ". Enter new marks (or -1 to keep): ";
                     int m; cin >> m;
                     if(m != -1) cm.second = m;
                 }
 
-                // Add new courses if desired
+                // Add new courses
                 cout << "\nDo you want to add a new course for this student? (y/n): ";
                 char ch; cin >> ch;
                 while(ch=='y' || ch=='Y'){
@@ -278,11 +308,11 @@ int main(){
                     cout << "Enter Credit: "; cin >> credit;
                     cout << "Enter Marks: "; cin >> marks;
                     s.courseMarks.push_back({cname, marks});
-                    courses.push_back({cname, credit, newYear, newSem}); // add to master course list
+                    courses.push_back({cname, credit, newYear, newSem});
                     cout << "Add another course? (y/n): "; cin >> ch;
                 }
 
-                // Delete courses if desired
+                // Delete courses
                 cout << "\nDo you want to delete a course for this student? (y/n): ";
                 cin >> ch;
                 while(ch=='y' || ch=='Y'){
@@ -308,7 +338,7 @@ int main(){
             cout << "\nStudent updated successfully!\n";
         }
         else if(choice==0){
-            cout << "\nExiting... Goodbye!\n";
+            cout << "\nExiting!\n";
         }
         else{
             cout << "\nInvalid choice! Try again.\n";
