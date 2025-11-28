@@ -305,7 +305,6 @@ int main(){
                     string cname;
                     int marks;
                     float credit;
-                    
                     cout << "Enter Course Name: "; cin >> cname;
                     cout << "Enter Credit: "; cin >> credit;
                     cout << "Enter Marks: "; cin >> marks;
