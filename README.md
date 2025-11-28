@@ -141,7 +141,7 @@ Works on:
 ```
 ===== STUDENT RESULT =====
 ID       : 221-15-1234
-Name     : Arpa Ahmed
+Name     : Arpa Bhowmick
 Year     : 2
 Semester : Spring
 
